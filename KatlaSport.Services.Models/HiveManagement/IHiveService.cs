@@ -29,7 +29,7 @@ namespace KatlaSport.Services.HiveManagement
         Task<Hive> CreateHiveAsync(UpdateHiveRequest createRequest);
 
         /// <summary>
-        /// Updates an existed hive.
+        /// Updates an existing hive.
         /// </summary>
         /// <param name="hiveId">A hive identifier.</param>
         /// <param name="updateRequest">A <see cref="UpdateHiveRequest"/>.</param>
@@ -37,14 +37,14 @@ namespace KatlaSport.Services.HiveManagement
         Task<Hive> UpdateHiveAsync(int hiveId, UpdateHiveRequest updateRequest);
 
         /// <summary>
-        /// Deletes an existed hive.
+        /// Deletes an existing hive.
         /// </summary>
         /// <param name="hiveId">A hive identifier.</param>
         /// <returns><see cref="Task"/></returns>
         Task DeleteHiveAsync(int hiveId);
 
         /// <summary>
-        /// Sets deleted status for a hive.
+        /// Sets status for a hive.
         /// </summary>
         /// <param name="hiveId">A hive identifier.</param>
         /// <param name="deletedStatus">Status.</param>

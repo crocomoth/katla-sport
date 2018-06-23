@@ -75,6 +75,7 @@ namespace KatlaSport.Services.HiveManagement
             }
         }
 
+        /// <inheritdoc />
         public async Task<HiveSection> CreateHiveSectionAsync(UpdateHiveSectionRequest request)
         {
             var dbHiveSections = await _context.Sections.Where(h => h.Code == request.Code).ToArrayAsync();
@@ -97,6 +98,7 @@ namespace KatlaSport.Services.HiveManagement
             return Mapper.Map<HiveSection>(dbHiveSection);
         }
 
+        /// <inheritdoc />
         public async Task<HiveSection> UpdateHiveSectionAsync(int id, UpdateHiveSectionRequest updateRequest)
         {
             var dbHiveSections = await _context
@@ -133,6 +135,7 @@ namespace KatlaSport.Services.HiveManagement
             return Mapper.Map<HiveSection>(dbHiveSection);
         }
 
+        /// <inheritdoc />
         public async Task DeleteHiveSectionAsync(int id)
         {
             var dbHiveSections = await _context.Sections.Where(s => s.Id == id).ToArrayAsync();
