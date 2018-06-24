@@ -93,7 +93,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="obj\Debug\*.cs;obj\Release\*.cs" />
+    <Compile Include="AutoMoqDataAttribute.cs" />
+    <Compile Include="CatalogueManagement\CatalogueManagementServiceTests.cs" />
+    <Compile Include="CustomerManagement\CustomerManagementServiceAutoFixtureTests.cs" />
+    <Compile Include="CustomerManagement\CustomerManagementServiceTests.cs" />
+    <Compile Include="FakeEntitySet.cs" />
+    <Compile Include="HiveManagement\HiveServiceTests.cs" />
+    <Compile Include="MockExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -113,6 +120,10 @@
     <ProjectReference Include="..\KatlaSport.Services\KatlaSport.Services.csproj">
       <Project>{4e3a6f6d-a888-41f3-bcf0-5e1c6fd0fa3e}</Project>
       <Name>KatlaSport.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KatlaSport.WebApi\KatlaSport.WebApi.csproj">
+      <Project>{2aed0d94-b116-41e2-b5a0-c8ce7f5b0407}</Project>
+      <Name>KatlaSport.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
