@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using KatlaSport.DataAccess.ProductStoreHive;
 using KatlaSport.Services.HiveManagement;
 using KatlaSport.Services.Tests.CustomMock;
@@ -44,6 +46,20 @@ namespace KatlaSport.Services.Tests.HiveManagement
             Assert.Empty(hives);
         }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task GetHiveAsync_TenItemReturned([Frozen] Mock<IProductStoreHiveContext> context, HiveService service, IFixture fixture)
+        {
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            var data = fixture.CreateMany<StoreHive>(10).ToList();
+            context.Setup(c => c.Hives).ReturnsEntitySet(data);
+            context.Setup(s => s.Sections).ReturnsEntitySet(new List<StoreHiveSection>());
+
+            var hives = await service.GetHivesAsync();
+
+            hives.Count.Should().Be(data.Count);
+        }
+
         [Fact]
         public async void CreateHiveSuccesFull()
         {
@@ -62,7 +78,7 @@ namespace KatlaSport.Services.Tests.HiveManagement
             var myProductMock =
                 new ProductStoreContextMock(new FakeEntitySet<StoreHive>(new List<StoreHive> { dbHive }), null, null);
 
-            var service = new HiveService(myProductMock, userContext.Object);
+            var service = new HiveService(productContext.Object, userContext.Object);
 
             var createRequest = new UpdateHiveRequest
             {
@@ -71,7 +87,20 @@ namespace KatlaSport.Services.Tests.HiveManagement
                 Code = "111341"
             };
             await service.CreateHiveAsync(createRequest);
-            Assert.NotNull(service.GetHivesAsync());
+            //Assert.NotNull(service.GetHivesAsync());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task SetStatusAsync_SetDeletedInFirstItem([Frozen] Mock<IProductStoreHiveContext> context, HiveService service, IFixture fixture)
+        {
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            var hives = fixture.CreateMany<StoreHive>(10).ToList();
+            hives.First().IsDeleted = false;
+            context.Setup(s => s.Hives).ReturnsEntitySet(hives);
+            context.Setup(s => s.Sections).ReturnsEntitySet(new List<StoreHiveSection>());
+
+            await service.SetStatusAsync(hives.First().Id, true);
         }
 
         [Theory]
@@ -83,6 +112,18 @@ namespace KatlaSport.Services.Tests.HiveManagement
             productContext.Setup(p => p.Hives).ReturnsEntitySet(hives);
 
             await service.DeleteHiveAsync(1);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DeleteHiveAsync_RequestedResourceNotFoundExceptionThrown([Frozen] Mock<IProductStoreHiveContext> context, HiveService service)
+        {
+            context.Setup(s => s.Hives).ReturnsEntitySet(new StoreHive[] { });
+
+            var exception = await Assert.ThrowsAsync<RequestedResourceNotFoundException>(
+                () => service.DeleteHiveAsync(0));
+
+            Assert.Equal(typeof(RequestedResourceNotFoundException), exception.GetType());
         }
 
         [Fact]
@@ -104,6 +145,18 @@ namespace KatlaSport.Services.Tests.HiveManagement
             };
 
             await service.UpdateHiveAsync(1, updateRequest);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task UpdateHiveSectionAsync_RequestedResourceNotFoundExceptionThrown([Frozen] Mock<IProductStoreHiveContext> context, HiveSectionService service, IFixture fixture)
+        {
+            context.Setup(s => s.Sections).ReturnsEntitySet(new StoreHiveSection[] { });
+
+            var exception = await Assert.ThrowsAsync<RequestedResourceNotFoundException>(
+                () => service.UpdateHiveSectionAsync(0, fixture.Create<UpdateHiveSectionRequest>()));
+
+            Assert.Equal(typeof(RequestedResourceNotFoundException), exception.GetType());
         }
 
         [Fact]
