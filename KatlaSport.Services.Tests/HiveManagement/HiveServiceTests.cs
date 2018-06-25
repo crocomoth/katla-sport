@@ -4,6 +4,7 @@ using AutoFixture;
 using AutoFixture.Xunit2;
 using KatlaSport.DataAccess.ProductStoreHive;
 using KatlaSport.Services.HiveManagement;
+using KatlaSport.Services.Tests.CustomMock;
 using Moq;
 using Xunit;
 
@@ -52,7 +53,16 @@ namespace KatlaSport.Services.Tests.HiveManagement
             var userContext = new Mock<IUserContext>();
             userContext.Setup(u => u.UserId).Returns(1);
 
-            var service = new HiveService(productContext.Object, userContext.Object);
+            var dbHive = new StoreHive
+            {
+                Id = 1,
+                Code = "12314321"
+            };
+
+            var myProductMock =
+                new ProductStoreContextMock(new FakeEntitySet<StoreHive>(new List<StoreHive> { dbHive }), null, null);
+
+            var service = new HiveService(myProductMock, userContext.Object);
 
             var createRequest = new UpdateHiveRequest
             {

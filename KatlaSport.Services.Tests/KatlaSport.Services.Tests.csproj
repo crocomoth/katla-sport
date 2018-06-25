@@ -97,7 +97,9 @@
     <Compile Include="CatalogueManagement\CatalogueManagementServiceTests.cs" />
     <Compile Include="CustomerManagement\CustomerManagementServiceAutoFixtureTests.cs" />
     <Compile Include="CustomerManagement\CustomerManagementServiceTests.cs" />
+    <Compile Include="CustomMock\ProductStoreContextMock.cs" />
     <Compile Include="FakeEntitySet.cs" />
+    <Compile Include="HiveManagement\HiveSectionServiceTests.cs" />
     <Compile Include="HiveManagement\HiveServiceTests.cs" />
     <Compile Include="MockExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
